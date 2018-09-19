@@ -1,0 +1,31 @@
+- name: Create/Stop Mongo Docker Container
+  hosts: localhost
+  connection: local  
+  remote_user: root
+  tasks:
+    - name: Create mongodb container exposing ports and mounting folder interactively
+      docker_container:
+        name: mongo_local
+        image: "mongo:latest"
+        state: started
+        recreate: yes
+        ports:
+          - "27017:27017"
+        volumes:
+          - /Users/david/development/mongodb/data/db:/data/db 
+        #interactive: true
+        #tty: true
+        #detach: false
+      tags:
+        - start-mongo
+    - name: Stop mongodb container exposing ports and mounting folder interactively
+      docker_container:
+        name: mongo_local
+        state: stopped
+      tags:
+        - stop-mongo
+    
+    - debug: msg="{{ docker_container.Config.Hostname }}"
+
+    # ansible-playbook mongo.yml --tags "stop-mongo"
+    # ansible-playbook mongo.yml --tags "start-mongo"

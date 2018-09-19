@@ -1,0 +1,18 @@
+- name: run the playbook tasks on the localhost
+  hosts: localhost
+  connection: local
+  tasks:
+
+  - name: print out hello
+    command: echo "hello world"
+    register: hello
+  
+  - name: install requirements
+    pip:
+      requirements: "{{ playbook_dir }}/requirements.txt"
+      executable: /anaconda3/bin/pip3
+    tags:
+      - python-requirements
+  
+  - debug: 
+      msg: "Printed {{hello.stdout}}"
